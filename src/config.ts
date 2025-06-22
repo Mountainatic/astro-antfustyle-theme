@@ -28,17 +28,17 @@ export const UI: Ui = {
     },
     {
       path: '/shorts',
-      title: 'Shorts',
+      title: '收集内容',
       displayMode: 'iconToTextOnMobile',
-      text: 'Shorts',
-      icon: 'i-material-symbols-note-stack-outline-sharp',
+      text: '收集内容',
+      icon: 'i-material-symbols-collections-bookmark',
     },
     {
       path: '/highlights',
-      title: 'Highlights',
+      title: '速记笔记',
       displayMode: 'iconToTextOnMobile',
-      text: 'Highlights',
-      icon: 'i-ri-screenshot-line',
+      text: '速记笔记',
+      icon: 'i-ri-lightbulb-line',
     },
     {
       path: '/changelog',

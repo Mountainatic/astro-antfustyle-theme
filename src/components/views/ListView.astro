@@ -20,7 +20,7 @@ interface Props {
 
 const { collectionType, pageToc } = Astro.props
 
-const VALID_COLLECTION_TYPE = ['blog', 'changelog', 'streams', 'feeds']
+const VALID_COLLECTION_TYPE = ['blog', 'changelog', 'streams', 'feeds', 'quickNotes']
 const WARNING = `The '${collectionType}' collection type is not built-in.
   Modify <code>ListView.astro</code> to render it.`
 
@@ -38,6 +38,27 @@ if (collectionType === 'blog' || collectionType === 'changelog') {
   if (tocEnabled) {
     const yearsSet = new Set<number>()
     sortedBlogItems.forEach((item) => {
+      const year = getYear(item.data.pubDate)
+      yearsSet.add(year)
+    })
+
+    years = Array.from(yearsSet)
+      .sort((a, b) => b - a)
+      .map((year) => year.toString())
+  }
+}
+
+/* Quick Notes */
+let sortedQuickNotes: CollectionEntry<'quickNotes'>[] = []
+if (collectionType === 'quickNotes') {
+  const quickNotesItems = await getCollection('quickNotes')
+  sortedQuickNotes = quickNotesItems.sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  )
+
+  if (tocEnabled) {
+    const yearsSet = new Set<number>()
+    sortedQuickNotes.forEach((item) => {
       const year = getYear(item.data.pubDate)
       yearsSet.add(year)
     })
@@ -170,6 +191,49 @@ if (collectionType === 'feeds') {
                 radio={item.radio}
                 date={item.pubDate}
                 platform={item.platform}
+              />
+            </>
+          )
+        })
+      )}
+    </div>
+  )
+}
+
+{
+  collectionType === 'quickNotes' && (
+    <div aria-label="Quick notes list">
+      {sortedQuickNotes.length === 0 ? (
+        <div class="py-2 op-50">暂无速记笔记</div>
+      ) : (
+        sortedQuickNotes.map(async (item, idx) => {
+          const { data, id } = item
+          const { remarkPluginFrontmatter } = await render(item)
+          const minutesRead =
+            data.minutesRead || remarkPluginFrontmatter.minutesRead
+
+          return (
+            <>
+              {!isSameYear(
+                data.pubDate,
+                sortedQuickNotes[idx - 1]?.data.pubDate
+              ) && (
+                <Categorizer
+                  {idx}
+                  needId={tocEnabled}
+                  text={getYear(data.pubDate).toString()}
+                />
+              )}
+              <ListItem
+                {idx}
+                {collectionType}
+                postSlug={id}
+                title={data.title}
+                video={data.video}
+                radio={data.radio}
+                date={data.pubDate}
+                {minutesRead}
+                platform={data.platform}
               />
             </>
           )

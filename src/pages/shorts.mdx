@@ -1,7 +1,7 @@
 ---
-title: Shorts
-subtitle: Share your short notes or quick thoughts
-description: Share your short notes or quick thoughts
+title: 收集内容
+subtitle: 精选文章、图片与代码片段收藏
+description: 收集的有价值的文章、图片、代码片段和链接
 bgType: particle
 toc: false
 ogImage: true
@@ -22,6 +22,6 @@ import CardView from '~/components/views/CardView.astro'
     subtitle={frontmatter.subtitle}
     isCentered={true}
   >
-    <CardView collectionType="shorts" mode="grid" />
+    <CardView collectionType="collectionsContent" mode="grid" />
   </StandardLayout>
 </BaseLayout>

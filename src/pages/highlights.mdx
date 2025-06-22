@@ -1,15 +1,15 @@
 ---
-title: Highlights
-subtitle: Showcase your creative work or curated posts
-description: Showcase your creative work or curated posts
+title: 速记笔记
+subtitle: 问题解决经验与快速学习记录
+description: 开发过程中遇到问题的解决方案和快速学习笔记
 bgType: false
-toc: false
-ogImage: false
+toc: true
+ogImage: true
 ---
 
 import BaseLayout from '~/layouts/BaseLayout.astro'
 import StandardLayout from '~/layouts/StandardLayout.astro'
-import CardView from '~/components/views/CardView.astro'
+import ListView from '~/components/views/ListView.astro'
 
 <BaseLayout
   title={frontmatter.title}
@@ -22,6 +22,6 @@ import CardView from '~/components/views/CardView.astro'
     subtitle={frontmatter.subtitle}
     isCentered={true}
   >
-    <CardView collectionType="highlights" mode="masonry" />
+    <ListView collectionType="quickNotes" pageToc={frontmatter.toc} />
   </StandardLayout>
 </BaseLayout>

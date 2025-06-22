@@ -226,6 +226,44 @@ export function processBlueskyPosts(data: CollectionEntryList<'highlights'>) {
 }
 
 /**
+ * Processes collections and converts them into `CardItemData` interface.
+ */
+export async function getCollectionsCards(data: CollectionEntryList<'collectionsContent'>): Promise<CardItemData[]> {
+  const cards: CardItemData[] = []
+  const basePath = resolvePath('/blog')
+
+  for (const collection of data) {
+    const { headings } = await render(collection)
+
+    // 为每个主要标题创建一个卡片
+    const mainHeadings = headings.filter(h => h.depth === 2)
+
+    if (mainHeadings.length > 0) {
+      for (const heading of mainHeadings) {
+        cards.push({
+          link: `${basePath}/${collection.id}#${heading.slug}`,
+          text: heading.text,
+          html: `<h3>${heading.text}</h3><p>来自：${collection.data.title}</p>`,
+          date: collection.data.pubDate,
+        })
+      }
+    } else {
+      // 如果没有标题，创建一个基于文章标题的卡片
+      cards.push({
+        link: `${basePath}/${collection.id}`,
+        text: collection.data.title,
+        html: `<h3>${collection.data.title}</h3><p>${collection.data.description}</p>`,
+        date: collection.data.pubDate,
+      })
+    }
+  }
+
+  return cards.sort((a, b) =>
+    new Date(b.date).valueOf() - new Date(a.date).valueOf()
+  )
+}
+
+/**
  * Processes blog posts and converts them into `CardItemData` interface.
  */
 export async function getShortsFromBlog(data: CollectionEntryList<'blog'>) {
